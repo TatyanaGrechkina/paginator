@@ -1,16 +1,18 @@
 import React from 'react';
 import '../paginator/Paginator.scss';
-import { ChevronLeftRounded, ChevronRightRounded } from '@material-ui/icons';
+import classNames from "classnames";
 
 type Props = {
     page: string;
+    selectedPage: string | null;
+    selectPage: (page: string) => void;
+}
+const PaginatorItem = (props: Props) => {
+    return (<button className={classNames("paginator__item", props.selectedPage ===  props.page && "paginator__item--selected")}
+                onClick={() => props.selectPage(props.page)}>
+           {props.page}
+        </button>)
 }
 
-const PaginatorItem = (props: Props) => {
-    return (
-        <div className={'paginator__item'}>
-        {props.page}
-    </div>)
-}
 
 export default PaginatorItem;
