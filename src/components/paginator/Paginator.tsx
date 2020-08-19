@@ -2,8 +2,7 @@ import React, {Component, createRef, RefObject, useRef} from 'react';
 import './Paginator.scss';
 import { ChevronLeftRounded, ChevronRightRounded } from '@material-ui/icons';
 import PaginatorItem from '../paginator-item/PaginatorItem';
-import {observer, useObserver} from "mobx-react";
-import paginatorStore from "../../store/paginator-store";
+import {inject, observer} from "mobx-react";
 
 interface Props {
     pages: string[];
@@ -12,30 +11,29 @@ interface Props {
 
 interface State {
 }
-
+@inject("store")
 @observer
-class Paginator extends Component<Props, State> {
-    private paginatorStore = paginatorStore;
-    constructor(props: Props) {
+export default class Paginator extends Component<any, State> {
+    constructor(props: any) {
         super(props);
     }
 
     selectPage = (page: string) => {
-        this.paginatorStore.setSelectedPage(page);
+        this.props.store.setSelectedPage(page);
     }
 
      setPaginatorRefValues = () => {
         const ref = document.getElementById("paginator__inner-content");
         const blockWidth = ref?.clientWidth ?? 0;
-         this.paginatorStore.setDisplayedPages(blockWidth, this.props.pages);
+         this.props.store.setDisplayedPages(blockWidth, this.props.pages);
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
         this.setPaginatorRefValues();
-        if (! this.paginatorStore.selectedPage) {
-            this.paginatorStore
-                .setSelectedPage(this.props.defaultSelectedPage ??  this.paginatorStore.displayedPages[0]);
+        if (! this.props.store.selectedPage) {
+            this.props.store
+                .setSelectedPage(this.props.defaultSelectedPage ??  this.props.store.displayedPages[0]);
         }
     }
 
@@ -48,20 +46,20 @@ class Paginator extends Component<Props, State> {
     }
 
     slideRight = () => {
-        this.paginatorStore.slideRight(this.props.pages);
+        this.props.store.slideRight(this.props.pages);
     }
 
     slideLeft = () => {
-        this.paginatorStore.slideLeft(this.props.pages);
+        this.props.store.slideLeft(this.props.pages);
     }
 
     render () {
-        const {displayedPages} =  this.paginatorStore;
+        const {displayedPages} =  this.props.store;
         return (
                 <div className={'paginator__content'}>
                     <ChevronLeftRounded  className={'paginator__chevron'} onClick={() => this.slideLeft()}/>
                     <div className={'paginator__inner-content'}  id="paginator__inner-content">
-                        {displayedPages?.map((page) => <PaginatorItem page={page} selectedPage={this.paginatorStore.selectedPage}
+                        {displayedPages?.map((page) => <PaginatorItem page={page} selectedPage={this.props.store.selectedPage}
                                                                       selectPage={this.selectPage}/>)}
                     </div>
                     <ChevronRightRounded  className={'paginator__chevron'} onClick={() => this.slideRight()}/>
@@ -69,4 +67,3 @@ class Paginator extends Component<Props, State> {
    )
   } 
 }
-export default Paginator;

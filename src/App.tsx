@@ -1,16 +1,13 @@
 import React from 'react';
 import './App.scss';
-import Paginator from './components/paginator/Paginator';
-import { PaginatorContextPage } from './components/paginator-contex/PaginatorContex';
+import PaginatorMain from "./components/paginator-main/PaginatorMain";
 
 function App() {
    const words = ['All', 'New', 'Popular'];
     return (
-        <PaginatorContextPage>
             <div className={"App"}>
-             <Paginator pages={words} />
+                <PaginatorMain pages={words}/>
             </div>
-        </PaginatorContextPage>
     );
 }
 
